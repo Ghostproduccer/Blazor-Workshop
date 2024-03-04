@@ -242,9 +242,9 @@ form {
     padding: 0 1.5rem;
 }
 
-.order-total.hidden {
-    transform: translate3d(0, 4rem, 0);
-}
+    .order-total.hidden {
+        transform: translate3d(0, 4rem, 0);
+    }
 
     .order-total .total-price {
         font-weight: 700;
@@ -412,27 +412,27 @@ form {
     padding: 0 1rem;
 }
 
-    .dialog-body > div {
-        display: flex;
-        margin-top: 1rem;
-        align-items: center;
-    }
+.dialog-body > div {
+    display: flex;
+    margin-top: 1rem;
+    align-items: center;
+}
 
-    .dialog-body label {
-        text-align: right;
-        width: 200px;
-        margin: 0 1.5rem;
-    }
+.dialog-body label {
+    text-align: right;
+    width: 200px;
+    margin: 0 1.5rem;
+}
 
-    .dialog-body input, .dialog-body select {
-        flex-grow: 1;
-        width: unset;
-    }
+.dialog-body input, .dialog-body select {
+    flex-grow: 1;
+    width: unset;
+}
 
-    .dialog-body .size-label {
-        min-width: 110px;
-        text-align: right;
-    }
+.dialog-body .size-label {
+    min-width: 110px;
+    text-align: right;
+}
 
 .dialog .toppings {
     text-align: center;
@@ -455,9 +455,9 @@ form {
     font-size: 0.8rem;
 }
 
-.dialog .topping-price::before {
-    content: '£';
-}
+    .dialog .topping-price::before {
+        content: '£';
+    }
 
 .delete-topping {
     background: none;
@@ -467,9 +467,9 @@ form {
     cursor: pointer;
 }
 
-.delete-topping:hover {
-    color: yellow;
-}
+    .delete-topping:hover {
+        color: yellow;
+    }
 
 .form-message {
     padding: 0.5rem;
@@ -655,6 +655,7 @@ input[type=range] {
 .checkout-cols {
     display: flex;
 }
+
     .checkout-cols h4 {
         margin-bottom: 1.5rem;
     }
@@ -756,4 +757,23 @@ input[type=range] {
     100% {
         transform: translateX(500px);
     }
+}
+
+/*CSS para la confirmaciópn del pedido*/
+
+.order-confirmation {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.order-confirmation button {
+    margin: 0 0.5rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-weight: 700;
 }
