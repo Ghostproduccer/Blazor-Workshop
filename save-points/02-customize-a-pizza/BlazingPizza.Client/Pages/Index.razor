@@ -36,6 +36,20 @@
         <div class="empty-cart">Choose a pizza<br>to get started</div>
     }
 
+    @if (order.Pizzas.Any())
+    {
+        <!-- Campo para introducir el código de descuento -->
+        <div class="table-bordered">
+            <label for="discountCode">Discount Code:</label>
+            <input class="blockquote" type="text" id="discountCode" @bind="discountCode" />
+            <button class="btn btn-primary" @onclick="ApplyDiscount">Apply</button>
+            <!-- Si existe, se muestra el mensaje de error -->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">@errorMessage</div>
+            }
+        </div>
+    }
     <div class="order-total @(order.Pizzas.Any() ? "" : "hidden")">
         Total:
         <span class="total-price">@order.GetFormattedTotalPrice()</span>
@@ -47,7 +61,7 @@
 
 @if (showingConfigureDialog)
 {
-    <ConfigurePizzaDialog
+    <ConfigurePizzaDialog 
         Pizza="configuringPizza"
                           OnCancel="CancelConfigurePizzaDialog"
                           OnConfirm="ConfirmConfigurePizzaDialog" />
@@ -104,4 +118,39 @@
         await HttpClient.PostAsJsonAsync("orders", order);
         order = new Order();
     }
-}
+
+    string discountCode = "";
+    bool discountApplied = false;
+    string errorMessage = "";
+
+    // Método para aplicar el descuento
+    void ApplyDiscount()
+    {
+        if (!discountApplied) // Verificar si el descuento no se ha aplicado ya
+        {
+            if (discountCode == "DISCOUNT1") //"DISCOUNT1" es el código de descuento válido
+            {
+                // Aplicar el descuento a cada pizza
+                foreach (var pizza in order.Pizzas)
+                {
+                    // Calcular el descuento del 30%
+                    decimal discountAmount = pizza.Special.BasePrice * 0.3m;
+                    pizza.Special.BasePrice -= discountAmount;
+                }
+                // Marcar que el descuento se aplicó
+                discountApplied = true;
+                errorMessage = "Valid discount code. Here's your discount!";
+            }
+            else
+            {
+                // Mostrar mensaje de error si el código de descuento es inválido
+                errorMessage = "Invalid discount code. Please try again.";
+            }
+        }
+        else
+        {
+            // Mostrar mensaje de error si el código de descuento ya se ha usado
+            errorMessage = "You already applied the discount.";
+        }
+    }
+} 

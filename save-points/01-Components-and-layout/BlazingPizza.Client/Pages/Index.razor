@@ -14,6 +14,7 @@
                         <span class="title">@special.Name</span>
                         @special.Description
                         <span class="price">@special.GetFormattedBasePrice()</span>
+                        
                         <!-- botón para agregar a favoritos -->
                         <button @onclick="() => AddToFavorites(special)">Add to Favorites</button>
                     </div>
@@ -23,6 +24,7 @@
     </ul>
 </div>
 
+<!-- sección para mostrar qué pizzas se acaban de añadir a favoritos -->
 <div>
     <h3>Added to favorites:</h3>
     <ul>
