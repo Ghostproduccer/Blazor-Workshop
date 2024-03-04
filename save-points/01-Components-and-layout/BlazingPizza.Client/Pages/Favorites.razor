@@ -1,0 +1,46 @@
+﻿@page "/favorites"
+@using BlazingPizza.Client.Services
+@inject FavoritesService FavoritesService
+
+<div class="main">
+    <h2>Your Favorites</h2>
+    <ul class="pizza-cards">
+        @if (favorites != null && favorites.Any())
+        {
+            @foreach (var favorite in favorites)
+            {
+                <li style="background-image: url('@favorite.ImageUrl')">
+                    <div class="pizza-info">
+                        <span class="title">@favorite.Name</span>
+                        @favorite.Description
+                        <span class="price">@favorite.GetFormattedBasePrice()</span>
+                        <!-- botón para agregar a favoritos -->
+                        <button @onclick="() => DeleteFromFavorites(favorite)">Delete from Favorites</button>
+                    </div>
+                </li>
+            }
+        }
+        else
+        {
+            <p>No favorites yet!</p>
+        }
+    </ul>
+</div>
+
+@code {
+    List<PizzaSpecial> favorites = new List<PizzaSpecial>();
+
+    protected override void OnInitialized()
+    {
+        favorites = GetFavorites();
+    }
+
+    List<PizzaSpecial> GetFavorites() => FavoritesService.favorites;
+
+    // Método para eliminar de favoritos
+    void DeleteFromFavorites(PizzaSpecial pizza)
+    {
+        FavoritesService.favorites.Remove(pizza);
+    }
+}
+

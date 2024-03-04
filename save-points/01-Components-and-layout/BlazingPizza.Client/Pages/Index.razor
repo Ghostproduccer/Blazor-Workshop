@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject HttpClient HttpClient
+@using BlazingPizza.Client.Services
+@inject FavoritesService FavoritesService
 
 <div class="main">
     <ul class="pizza-cards">
@@ -12,6 +14,8 @@
                         <span class="title">@special.Name</span>
                         @special.Description
                         <span class="price">@special.GetFormattedBasePrice()</span>
+                        <!-- botón para agregar a favoritos -->
+                        <button @onclick="() => AddToFavorites(special)">Add to Favorites</button>
                     </div>
                 </li>
             }
@@ -19,11 +23,35 @@
     </ul>
 </div>
 
+<div>
+    <h3>Added to favorites:</h3>
+    <ul>
+        @foreach (var favorite in favorites)
+        {
+            <li>@favorite.Name</li>
+        }
+    </ul>
+</div>
+
 @code {
     List<PizzaSpecial>? specials;
+    
+    //lista de pizzas favoritas
+    List<PizzaSpecial> favorites = new List<PizzaSpecial>();
 
     protected override async Task OnInitializedAsync()
     {
-        specials = await HttpClient.GetFromJsonAsync("specials", BlazingPizza.OrderContext.Default.ListPizzaSpecial);
+        // Se carga la lista de pizzas especiales desde la API
+        specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>("specials");
+        //Se carga la lista de favorites desde el servicio
+        favorites = GetFavorites();
+    }
+
+    List<PizzaSpecial> GetFavorites() => FavoritesService.favorites;
+
+    // Método para agregar a favoritos
+    void AddToFavorites(PizzaSpecial pizza)
+    {
+        FavoritesService.favorites.Add(pizza);
     }
 }
