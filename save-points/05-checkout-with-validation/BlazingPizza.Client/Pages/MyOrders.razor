@@ -29,10 +29,15 @@
                     <div class="col">
                         Status: <strong>@item.StatusText</strong>
                     </div>
-                    <div class="col flex-grow-0">
+                    <div class="flex-grow-0">
                         <a href="myorders/@item.Order.OrderId" class="btn btn-success">
                             Track &gt;
                         </a>
+                        <!--Botón para confirmar la entrega-->
+                        @if (item.StatusText != "Delivered")
+                        {
+                            <button class="btn btn-danger" @onclick="() => ConfirmDelivery(item)">Confirm Delivery</button>
+                        }
                     </div>
                 </div>
             }
@@ -46,5 +51,11 @@
     protected override async Task OnParametersSetAsync()
     {
         ordersWithStatus = await HttpClient.GetFromJsonAsync<List<OrderWithStatus>>("orders");
+    }
+
+    //metodo para confirmar la entrega
+    private void ConfirmDelivery(OrderWithStatus order)
+    {
+        order.StatusText = "Delivered"; // Actualiza el estado del pedido en el cliente
     }
 }
