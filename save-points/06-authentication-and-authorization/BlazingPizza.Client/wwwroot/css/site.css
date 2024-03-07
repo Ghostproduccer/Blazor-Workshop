@@ -757,3 +757,9 @@ input[type=range] {
         transform: translateX(500px);
     }
 }
+
+.profile-page {
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+}

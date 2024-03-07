@@ -1,0 +1,87 @@
+﻿@page "/profile"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject OrdersClient OrdersClient
+
+<div class="container-fluid" style="background-image: url('/img/pizza-background.png');">
+    <div class="container">
+        <h2 class="text-center">My Profile</h2>
+        <div class="card">
+            <div class="card-body">
+                <!-- Verifica si hay un usuario autenticado -->
+                @if (User != null)
+                {
+                    <!-- Muestra info de usuario -->
+                    <p><strong>Username:</strong> @User.Identity.Name</p>
+                    <p><strong>Email:</strong> @User.Identity.ToString()</p>
+                    <p><strong>Email:</strong> @User.Identity.AuthenticationType</p>
+                    <p><strong>Email:</strong> @User.Identity.IsAuthenticated</p>
+
+                    <!-- Historial de pedidos -->
+                    <h3>Order History</h3>
+                    <div class="list-group orders-list">
+                        @if (ordersWithStatus is null)
+                        {
+                            <text>Loading...</text>
+                        }
+                        else if (!ordersWithStatus.Any())
+                        {
+                            <h5>No orders placed</h5>
+                            <a class="btn btn-success" href="">Order some pizza</a>
+                        }
+                        <!-- Si hay pedidos, mostrar cada uno -->
+                        else
+                        {
+                            @foreach (var item in ordersWithStatus)
+                            {
+                                <div class="list-group-item">
+                                    <div class="col">
+                                        <h5>@item.Order.CreatedTime.ToLongDateString()</h5>
+                                        Items:
+                                        <strong>@item.Order.Pizzas.Count()</strong>;
+                                        Total price:
+                                        <strong>£@item.Order.GetFormattedTotalPrice()</strong>
+                                    </div>
+                                    <div class="col">
+                                        Status: <strong>@item.StatusText</strong>
+                                    </div>
+                                    <div class="col flex-grow-0">
+                                        <a href="myorders/@item.Order.OrderId" class="btn btn-success">
+                                            Track &gt;
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p>No user information available.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private System.Security.Claims.ClaimsPrincipal User { get; set; }
+    IEnumerable<OrderWithStatus>? ordersWithStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtiene el estado de autenticación actual
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        User = authState.User;
+
+        try
+        {
+            // Obtiene los pedidos del usuario
+            ordersWithStatus = await OrdersClient.GetOrders();
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+    }
+}

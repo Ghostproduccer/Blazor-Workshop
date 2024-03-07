@@ -17,6 +17,17 @@
         </NavLink>
     </AuthorizeView>
 
+    <!-- Página de perfil se muestra si el ususario está autorizado-->
+    <AuthorizeView>
+        <Authorized>
+            <NavLink href="profile" class="nav-tab">
+                <img src="img/account-cowboy-hat.svg" />
+                <div>My Profile</div>
+            </NavLink>
+            
+        </Authorized>
+    </AuthorizeView>
+
     <LoginDisplay />
 </div>
 
