@@ -1,13 +1,21 @@
 ﻿@if (Show)
 {
-    <div class="dialog-container">
-        <div class="dialog">
-            @ChildContent
+    <!-- Contenedor del diálogo -->
+    <div class="dialog-container" @onclick="CloseDialog"> <!-- Div contenedor con clase "dialog-container" -->
+        <!-- Diálogo -->
+        <div class="dialog" @onclick:stopPropagation> <!-- Div del diálogo con clase "dialog" -->
+            @ChildContent <!-- Contenido del diálogo -->
         </div>
     </div>
 }
 
 @code {
-    [Parameter, EditorRequired] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public bool Show { get; set; }
+    [Parameter, EditorRequired] public RenderFragment? ChildContent { get; set; } // Contenido del diálogo
+    [Parameter] public bool Show { get; set; } // Indica si el diálogo está visible
+
+    // Método para cerrar el diálogo
+    private void CloseDialog()
+    {
+        Show = false; // Oculta el diálogo al hacer clic en el contenedor del diálogo
+    }
 }
