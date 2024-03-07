@@ -2,6 +2,8 @@
 @inject HttpClient HttpClient
 @inject OrderState OrderState
 @inject NavigationManager NavigationManager
+
+@* Inyectamos el JSRuntime *@
 @inject IJSRuntime JS
 
 <div class="main">
@@ -30,6 +32,7 @@
 
             @foreach (var configuredPizza in Order.Pizzas)
             {
+                <!-- llamamos al método RemovePizza que añadimos para mostrar el diálogo con JS -->
                 <ConfiguredPizzaItem Pizza="configuredPizza" OnRemoved="@(() => RemovePizza(configuredPizza))" />
             }
         </div>
@@ -73,10 +76,14 @@
         NavigationManager.NavigateTo($"myorders/{newOrderId}");
     }
 
+
+    //método para eliminar la pizza
     async Task RemovePizza(Pizza configuredPizza)
     {
-        if (await JS.Confirm($"Remove {configuredPizza.Special?.Name} pizza from the order?"))
+        //muestra un mensaje de confirmación con javascript
+        if (await JS.Confirm($"Eliminar la pizza {configuredPizza.Special?.Name} del pedido?"))
         {
+            //si se confirma elimina la pizza del carrito
             OrderState.RemoveConfiguredPizza(configuredPizza);
         }
     }
